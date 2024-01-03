@@ -1,0 +1,64 @@
+---
+  - name: Create local tmp
+    ansible.builtin.file:
+      path: tmp
+      state: directory
+    register: local_dir
+    delegate_to: localhost
+
+  - name: Check for local kubekey exists
+    local_action:
+      module: stat
+      path: "tmp/kubekey-{{ kubekey_version }}-linux-amd64.tar.gz"
+    register: kubekey_local_result
+
+  - name: Download kubekey to local folder
+    get_url:
+      url: "https://github.com/kubesphere/kubekey/releases/download/{{ kubekey_version }}/kubekey-{{ kubekey_version }}-linux-amd64.tar.gz"
+      dest: "tmp/kubekey-{{ kubekey_version }}-linux-amd64.tar.gz"
+      mode: '0644'
+    register: _download_binary
+    until: _download_binary is succeeded
+    retries: 5
+    delay: 2
+    delegate_to: localhost
+    check_mode: false
+    when: not kubekey_local_result.stat.exists
+
+  - name: Unpack kubekey binary
+    unarchive:
+      src: "tmp/kubekey-{{ kubekey_version }}-linux-amd64.tar.gz"
+      dest: "{{playbook_dir}}/tmp/"
+      creates: "kubekey-{{ kubekey_version }}-linux-amd64/kk"
+    delegate_to: localhost
+    check_mode: false
+
+  - name: Copy content of directory 'files'
+    copy:
+      src: files/
+      dest: "{{playbook_dir}}/tmp/"
+    delegate_to: localhost
+
+  - name: Copy kubekey.yaml
+    template:
+      src: kubekey.yaml.j2
+      dest: "{{playbook_dir}}/tmp/kubekey.yaml"
+    delegate_to: localhost
+
+  - name: Copy cilium-values.yaml
+    template:
+      src: cilium-values.yaml.j2
+      dest: "{{playbook_dir}}/tmp/cilium-values.yaml"
+    delegate_to: localhost
+
+  - name: Run kk
+    ansible.builtin.shell:
+      cmd: ./kk create cluster -f kubekey.yaml --yes
+      chdir: "{{playbook_dir}}/tmp/"
+    delegate_to: localhost
+
+  - name: Delete tmp
+    ansible.builtin.file:
+      state: absent
+      path: "{{playbook_dir}}/tmp"
+    delegate_to: localhost

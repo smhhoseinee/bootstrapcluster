@@ -1,0 +1,81 @@
+redis-ha:
+  enabled: true
+
+controller:
+  replicas: 3
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      selector:
+        release: monitoring
+
+repoServer:
+  replicas: 2
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      selector:
+        release: monitoring
+
+global:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      selector:
+        release: monitoring
+
+redis:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      selector:
+        release: monitoring
+
+dex:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      selector:
+        release: monitoring
+
+server:
+  replicas: 3
+  # service:
+  #   type: LoadBalancer
+  #   loadBalancerIP: "192.168.1.110"
+  extraArgs:
+    - --insecure
+  extensions:
+    enabled: true
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      selector:
+        release: monitoring
+
+configs:
+  cm:
+    admin.enabled: 'true'
+    application.instanceLabelKey: argocd.argoproj.io/instance
+    exec.enabled: 'true'
+    server.rbac.log.enforce.enable: 'false'
+    url: 'https://cd.skyroom.online/'
+    # oidc.config: |
+    #   name: keycloak
+    #   issuer: https://id.skyroom.online/auth/realms/skyroom
+    #   clientID: argocd
+    #   clientSecret: AadD0JWuBCGoMQ4Ro6WldDGBOWiNUEvk
+    #   requestedIDTokenClaims:
+    #     groups:
+    #       essential: true
+    #   requestedScopes:
+    #     - openid
+    #     - profile
+    #     - email
+    #     - groups

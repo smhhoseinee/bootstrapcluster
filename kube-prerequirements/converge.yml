@@ -1,0 +1,9 @@
+---
+- hosts:  
+  - masters
+  - workers
+  become: true
+
+  roles:
+    - role: node-exporter
+    - role: prerequirements-installation

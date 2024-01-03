@@ -1,0 +1,24 @@
+---
+kubernetes_version: "{{ vault_kubernetes_version }}"
+kubekey_version: "{{ vault_kubekey_version }}"
+
+username: "{{ vault_username }}"
+password: "{{ vault_password }}"
+
+master1_address: "{{ vault_master1_address }}"
+master2_address: "{{ vault_master2_address }}"
+master3_address: "{{ vault_master3_address }}"
+
+worker1_address: "{{ vault_worker1_address }}"
+worker2_address: "{{ vault_worker2_address }}"
+worker3_address: "{{ vault_worker3_address }}"
+worker4_address: "{{ vault_worker4_address }}"
+worker5_address: "{{ vault_worker5_address }}"
+
+kube_vip_address: "{{ vault_kube_vip_address }}"
+
+domain: "{{ vault_domain }}"
+cluster_name: "{{ vault_cluster_name }}"
+
+port: "{{ vault_port }}"
+api_server_port: "{{ vault_api_server_port }}"

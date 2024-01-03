@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tools
+  namespace: argocd
+spec:
+  destination:
+    name: ''
+    namespace: tools
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: app-of-apps
+    repoURL: 'https://github.com/mbarazandeh110/app-of-apps-skyroom.git'
+    targetRevision: HEAD
+  project: default
+  syncPolicy:
+    managedNamespaceMetadata:
+      labels:
+        private-gateway-access: "true"
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=orphan

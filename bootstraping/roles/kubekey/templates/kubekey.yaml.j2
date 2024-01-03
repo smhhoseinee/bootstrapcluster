@@ -1,0 +1,105 @@
+apiVersion: kubekey.kubesphere.io/v1alpha2
+kind: Cluster
+metadata:
+  name: tools
+spec:
+  hosts:
+  - {name: master1, address: {{ master1_address }}, internalAddress: {{ master1_address }}, user: {{ username }}, password: "{{ password }}", port: {{ port }}}
+  - {name: master2, address: {{ master2_address }}, internalAddress: {{ master2_address }}, user: {{ username }}, password: "{{ password }}", port: {{ port }}}
+  - {name: master3, address: {{ master3_address }}, internalAddress: {{ master3_address }}, user: {{ username }}, password: "{{ password }}", port: {{ port }}}
+  - {name: worker1, address: {{ worker1_address }}, internalAddress: {{ worker1_address }}, user: {{ username }}, password: "{{ password }}", port: {{ port }}}
+  - {name: worker2, address: {{ worker2_address }}, internalAddress: {{ worker2_address }}, user: {{ username }}, password: "{{ password }}", port: {{ port }}}
+  - {name: worker3, address: {{ worker3_address }}, internalAddress: {{ worker3_address }}, user: {{ username }}, password: "{{ password }}", port: {{ port }}}
+  - {name: worker4, address: {{ worker4_address }}, internalAddress: {{ worker4_address }}, user: {{ username }}, password: "{{ password }}", port: {{ port }}}
+  - {name: worker5, address: {{ worker5_address }}, internalAddress: {{ worker5_address }}, user: {{ username }}, password: "{{ password }}", port: {{ port }}}
+  roleGroups:
+    etcd:
+    - master1
+    - master2
+    - master3
+    control-plane: 
+    - master1
+    - master2
+    - master3
+    worker:
+    - worker1
+    - worker2
+    - worker3
+    - worker4
+    - worker5
+  controlPlaneEndpoint:
+    ## Internal loadbalancer for apiservers 
+    internalLoadbalancer: kube-vip
+    domain: {{ domain }}
+    address: {{ kube_vip_address }}
+    port: {{ api_server_port }}
+  kubernetes:
+    version: {{ kubernetes_version }}
+    clusterName: {{ cluster_name }}
+    autoRenewCerts: true
+    containerManager: containerd
+    disableKubeProxy: true
+  etcd:
+    type: kubekey
+  system:
+    preInstall:
+      - name: crictl config
+        bash: cp /tmp/kubekeyPreInstall-0-script/crictl.yaml /etc/crictl.yaml
+        materials:
+          - ./crictl.yaml
+  network:
+    plugin: cilium
+    kubePodsCIDR: 10.233.64.0/18
+    kubeServiceCIDR: 10.233.0.0/18
+    ## multus support. https://github.com/k8snetworkplumbingwg/multus-cni
+    multusCNI:
+      enabled: false
+  registry:
+    privateRegistry: ""
+    namespaceOverride: ""
+    registryMirrors: []
+    insecureRegistries: []
+  addons:
+    - name: prometheus-operator-crds
+      namespace: monitoring
+      sources:
+        chart:
+          name: prometheus-operator-crds
+          version: 8.0.1
+          repo: https://prometheus-community.github.io/helm-charts/
+    - name: gateway-api-crds
+      namespace: kube-system
+      sources:
+        yaml:
+          path:
+            - https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/experimental-install.yaml
+    - name: cilium
+      delay: 50
+      namespace: kube-system
+      sources:
+        chart:
+          name: cilium
+          version: 1.14.5
+          repo: https://helm.cilium.io/
+          valuesFile: cilium-values.yaml
+    - name: argocd-namespace
+      sources:
+        yaml:
+          path:
+            - argocd-namespace.yaml
+    - name: argocd
+      delay: 50
+      namespace: argocd
+      sources:
+        chart:
+          name: argo-cd
+          version: 5.51.6
+          repo: https://argoproj.github.io/argo-helm
+          valuesFile: argocd-values.yaml
+    - name: argocd-repo
+      delay: 50
+      namespace: argocd
+      sources:
+        yaml:
+          path:
+            - argocd-application.yaml

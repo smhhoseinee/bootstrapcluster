@@ -1,0 +1,58 @@
+---
+- name: apt update
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+    force_apt_get: true
+  ignore_errors: yes
+
+- name: remove docker.io
+  apt:
+    name: "{{ item }}"
+    purge: yes
+    state: absent
+  with_items:
+    - docker.io
+    - docker-engine
+    - docker-ce
+    - docker-ce-cli
+
+- name: install requirements
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - socat
+    - containerd
+    - conntrack
+    - iptables
+    - ipset
+    - ipvsadm
+    - runc
+    - ssh-import-id
+    - linux-tools-common
+    - linux-tools-generic
+    - htop
+    - bmon
+    - ncdu 
+
+- name: Disabling swap
+  shell: "swapoff --all"
+  become: true
+
+- name: Disable swap permanently, persist reboots
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'
+    backup: yes
+
+- name: Remove swap file
+  ansible.builtin.file:
+    path: /swap.img
+    state: absent
+
+- name: import ssh keys
+  become: false
+  command: ssh-import-id-gh "{{ item }}"
+  loop: "{{ users }}"

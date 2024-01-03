@@ -1,0 +1,9 @@
+---
+- hosts:  
+    - masters
+    - workers
+  become: true
+  # gather_facts: false
+
+  roles:
+    - role: ssh_hardening
