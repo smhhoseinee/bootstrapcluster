@@ -1,29 +1,27 @@
 kubeProxyReplacement: true
 k8sServicePort: "{{ api_server_port }}"
 k8sServiceHost: "{{ kube_vip_address }}"
-hubble:
-  enabled: true
-gatewayAPI:
-  enabled: true
-enable-ipv4-big-tcp: true
-bpf:
-  masquerade: true
-  hostLegacyRouting: false
-externalIPs:
-  enabled: true
-l2announcements:
-  enabled: true
-  leaseDuration: 3s
-  leaseRenewDeadline: 1s
-  leaseRetryPeriod: 200ms
-rollOutCiliumPods: true
-routingMode: "native"
 k8sClientRateLimit:
   qps: 20
   burst: 100
-# prometheus:
-#   enabled: true
-#   serviceMonitor:
-#     enabled: true
-#     selector:
-#       release: monitoring
+l2announcements:
+  enabled: "true"
+  leaseDuration: 3s
+  leaseRenewDeadline: 1s
+  leaseRetryPeriod: 200ms
+hubble:
+  enabled: "true"
+gatewayAPI:
+  enabled: "true"
+  #enableIPv4BIGTCP: "true"
+bpf:
+  masquerade: "true"
+  hostLegacyRouting: "false"
+externalIPs:
+  enabled: "true"
+rollOutCiliumPods: "true"
+routingMode: "native"
+ipv4NativeRoutingCIDR: "10.233.64.0/18"
+endpointRoutes:
+  enabled: "true"
+
