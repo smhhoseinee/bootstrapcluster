@@ -1,11 +1,26 @@
-kubeProxyReplacement: strict
-k8sServicePort: 6443
-k8sServiceHost: {{ kube_vip_address }}
+kubeProxyReplacement: true
+k8sServicePort: "6443"
+k8sServiceHost: "{{ kube_vip_address }}"
 hubble:
   enabled: true
 gatewayAPI:
   enabled: true
 enable-ipv4-big-tcp: true
+bpf:
+  masquerade: true
+  hostLegacyRouting: false
+externalIPs:
+  enabled: true
+l2announcements:
+  enabled: true
+  leaseDuration: 3s
+  leaseRenewDeadline: 1s
+  leaseRetryPeriod: 200ms
+rollOutCiliumPods: true
+routingMode: "native"
+k8sClientRateLimit:
+  qps: 20
+  burst: 100
 # prometheus:
 #   enabled: true
 #   serviceMonitor:
