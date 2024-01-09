@@ -21,6 +21,9 @@ externalIPs:
   enabled: "true"
 rollOutCiliumPods: "true"
 routingMode: "native"
-ipv4NativeRoutingCIDR: "10.233.64.0/18"
 endpointRoutes:
   enabled: "true"
+ipam:
+  operator:
+    clusterPoolIPv4PodCIDRList: ["10.233.64.0/18"] # 10.0.0.0/8
+# ipv4NativeRoutingCIDR: "10.233.64.0/18"
