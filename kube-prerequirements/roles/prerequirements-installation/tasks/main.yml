@@ -34,7 +34,13 @@
     - linux-tools-generic
     - htop
     - bmon
-    - ncdu 
+    - ncdu
+
+- name: Add the ip_vs module
+  community.general.modprobe:
+    name: ip_vs
+    state: present
+    persist: present
 
 - name: Disabling swap
   shell: "swapoff --all"
