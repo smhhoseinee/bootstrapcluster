@@ -11,19 +11,28 @@ l2announcements:
   leaseRetryPeriod: 200ms
 hubble:
   enabled: "true"
+  relay:
+    enabled: "true"
+  ui:
+    enabled: "true"
 gatewayAPI:
   enabled: "true"
-  #enableIPv4BIGTCP: "true"
+#enableIPv4BIGTCP: "true"
 bpf:
   masquerade: "true"
   hostLegacyRouting: "false"
 externalIPs:
   enabled: "true"
 rollOutCiliumPods: "true"
-routingMode: "native"
 endpointRoutes:
   enabled: "true"
 ipam:
   operator:
     clusterPoolIPv4PodCIDRList: ["10.233.64.0/18"] # 10.0.0.0/8
-# ipv4NativeRoutingCIDR: "10.233.64.0/18"
+ipv4NativeRoutingCIDR: "10.233.64.0/18"
+# routingMode: "native"
+# autoDirectNodeRoutes: true
+hostPort:
+  enabled: "true"
+nodePort:
+  enabled: "true"
