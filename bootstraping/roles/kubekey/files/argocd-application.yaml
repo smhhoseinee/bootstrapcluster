@@ -10,7 +10,8 @@ spec:
     server: 'https://kubernetes.default.svc'
   source:
     path: app-of-apps
-    repoURL: 'https://github.com/mbarazandeh110/app-of-apps-skyroom.git'
+    # repoURL: 'https://github.com/mbarazandeh110/app-of-apps-skyroom.git'
+    repoURL: 'https://github.com/smhhoseinee/app-of-apps.git'
     targetRevision: HEAD
   project: default
   syncPolicy:
