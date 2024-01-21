@@ -11,7 +11,8 @@ spec:
   source:
     path: app-of-apps
     # repoURL: 'https://github.com/mbarazandeh110/app-of-apps-skyroom.git'
-    repoURL: 'https://github.com/smhhoseinee/app-of-apps.git'
+    # repoURL: 'https://github.com/smhhoseinee/app-of-apps.git'
+    repoURL: 'https://github.com/SkyroomOnline/app-of-apps-skyroom.git'
     targetRevision: HEAD
   project: default
   syncPolicy:
